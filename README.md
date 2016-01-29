@@ -17,11 +17,11 @@ Technically, yes but pragmatically no. The key limitation is that the RDBMS appr
 
 The future of genomics depends on our ability to leverage distributed storage and computing, so what database architecture is best?  Let's find out by addressing the following challenges:
 
-- Challenge #1.  The multiple source integration problem.
+- __Challenge #1.  The multiple source integration problem.__
 
-- Challenge #2.  The cost projection problem.
+- __Challenge #2.  The cost projection problem.__
 
-- Challenge #3.  The forward looking technology problem.
+- __Challenge #3.  The forward looking technology problem.__
 
 The purpose of this challenge is not an ideological one, rather an empirical one.  We are looking for submissions from experts f various architectures to [submit solutions](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki/Rules) to address these challenges.  If you think you have a better solution an those that currently exist, please follow the instructions to submit your own response.
 
