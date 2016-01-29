@@ -13,7 +13,7 @@ It's pretty clear, we need to move to a database if we want to stay on top of th
 
 > Why not just throw all your data into a MySQL database?  Won't that work?
 
-Technically, yes but pragmatically no. The key limitation is that the RDBMS approach scales up rather than scaling out for this particular use case.  Genomics is somewhat heterogeneous, constantly evolving and growing, and we need to leverage distributed computing and storage.  But if not MySQL, then what? *This is what this project is all about!*
+Technically, yes but pragmatically no. The key limitation is that the RDBMS approach scales ~up~ rather than scaling ~out~ for this particular use case.  Genomics is somewhat heterogeneous, constantly evolving and growing, and needs to leverage distributed computing and storage.  But if not MySQL, then what? *This is what this project is all about!*
 
 The future of genomics depends on our ability to leverage distributed storage and computing, so what database architecture is best?  Let's find out by addressing the following challenges:
 
@@ -23,3 +23,7 @@ The future of genomics depends on our ability to leverage distributed storage an
 
 - Challenge #3.  The forward looking technology problem.
 
+The purpose of this challenge is not an ideological one, rather an empirical one.  We are looking for submissions from experts f various architectures to submit solutions to address these challenges.  If you think you have a better solution an those that currently exist, please follow the instructions to submit your own response.
+
+*What's in it for you?*
+The plan is to submit a peer reviewed manuscript showing the results of these challenges.  Those who participate will be listed as co-authors.  The winner of the challenge will be the first author.  Companies are more than welcome to participate.
