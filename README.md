@@ -23,7 +23,7 @@ The future of genomics depends on our ability to leverage distributed storage an
 
 - __Challenge #3.  The forward looking technology problem.__
 
-The purpose of this challenge is not an ideological one, rather an empirical one.  We are looking for submissions from experts f various architectures to [submit solutions](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki/Rules) to address these challenges.  If you think you have a better solution an those that currently exist, please follow the instructions to submit your own response.
+The purpose of this challenge is not an ideological one, rather an empirical one.  We are looking for submissions from experts of various architectures to [submit solutions](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki/Rules) to address these challenges.  If you think you have a better solution an those that currently exist, please follow the instructions to submit your own response.
 
 *What's in it for you?*
 The plan is to submit a peer reviewed manuscript showing the results of these challenges.  Those who participate will be listed as co-authors.  The winner of the challenge will be the first author.  Companies are more than welcome to participate.
