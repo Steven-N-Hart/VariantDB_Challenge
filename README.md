@@ -5,7 +5,7 @@ This repo is designed to serve as a testing framework for different database sch
 1. __VCF files need to be filtered in many different ways depending on the study question__
   - For example, if I wanted to exclude variants that change the protein sequence, I would write a filter program on the command-line and then write the subsetted VCF into yet another file.  This is a huge burden on data storage, as well as tracking data provenance.
 2. __It's just not a scalable strategy__
-  - I have a hard enough time keeping track of where all my files are from this year, let alone last year.  Instead many of us have to keep separate files that track where all of our files are.
+  - I have a hard enough time keeping track of where all my files are from this year, let alone last year.  Instead many of us have to keep separate files that track where all of our other files are located.
 3. __VCF files do not store metadata__
   - VCF files are OK for storing genetic variants, but the lack information about the samples they represent.  For example, simple metadata such as which samples are cases or controls, how old was the patient, etc. is not available in the current specification.
  
