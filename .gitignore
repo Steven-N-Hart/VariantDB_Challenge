@@ -12,3 +12,7 @@
 # Ignore Intellij project files
 /.idea
 *.iml
+
+# Ignore Data Files
+*.vcf
+*.vcf.gz
