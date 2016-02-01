@@ -27,5 +27,7 @@ The purpose of this challenge is not an ideological one, rather an empirical one
 
 The plan is to submit a peer reviewed manuscript showing the results of these challenges.  Those who participate will be listed as co-authors.  The winner of the challenge will be the first author.  Companies are more than welcome to participate.
 
+If you are a fan of open science, Hadoop, Spark, and other Big Data projects, then this challenge is for you!
+
 
 #### See the [Wiki](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki) and [Rules](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki/Rules) pages for more details.
