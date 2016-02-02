@@ -34,8 +34,8 @@ sub validateInput{
 sub formatParse{
 	#formatSchema is a ":" delimited grouping from teh VCF file
 	#sampleFormat is the data from teh VCF that follows the formatSchema
-	#keyName is the chrom:pos:ref:alt:sampleID
-	($formatSchema,$sampleFormat,$keyName) = @_ ;
+	#keyName is the chrom:pos:ref:alt:study:sampleID
+	my ($formatSchema,$sampleFormat,$chr,$pos,$ref,$alt,$study,$sampleID) = @_ ;
 	#Convert the formatSchema and sampleFormat into arrays
 	@formatSchema = split(":", $formatSchema);
 	@sampleFormat =	split(":", $sampleFormat);
@@ -48,8 +48,16 @@ sub formatParse{
 
 			#print special key identifier
 			@formatValues = ();
-			$key = "_key : \"$keyName\"";
-			push(@formatValues,$key);
+			#Add chrom,pos,ref,alt,study,sample Identifiers
+			$chr = "chr:\"$chr\"";
+			$pos = "pos:". $pos;
+			$ref = "ref:\"$ref\"";
+			$alt = "alt:\"$alt\"";
+			$study = "study:\"$study\"";
+			$sampleID = "sampleID:\"$sampleID\"";
+			push(@formatValues,$chr,$pos,$ref,$alt,$study,$sampleID);
+			#$key = "_key : \"$keyName\"";
+			#push(@formatValues,$key);
 			for ($i=0; $i < @formatSchema; $i++){
 				#Skip any data point that is uninformative
 				next if($sampleFormat[$i] =~ /\./);
@@ -163,7 +171,7 @@ while(<VCF>){
 
 		#### Print out some standard errors to keep me up to dat with progress
 		if($. % 1000 == 0){
-			$lineNo = sprintf("%.0f", $./24824 *10);
+			$lineNo = sprintf("%.0f", $./348234 *10);
 			print STDERR "Line Number $. of 348234 ($lineNo%)\n"
 		}
 
@@ -190,8 +198,7 @@ while(<VCF>){
 			$sampleName = $SAMPLES[$j];
 			#Make sure sample name doesn't have a -
 			$sampleName =~ s/-//g;
-			$_key = join("-",@line[0,1,3,4],$study,$SAMPLES[$j]);
-			formatParse($line[8],$line[$j],$_key);			
+			formatParse($line[8],$line[$j],@line[0,1,3,4],$study,$SAMPLES[$j]);			
 		}
 	}
 }
