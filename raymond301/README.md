@@ -10,7 +10,7 @@
   - Argument against any database: requires dependencies and specialized environments.
   - Suggested SQLite (backend for portability and flexibility) + App [Gemini](https://github.com/arq5x/gemini) OR [VariationToolKit](https://github.com/lindenb/variationtoolkit) and additional [Blog](http://plindenbaum.blogspot.com/2012_01_01_archive.html)
   - Suggestion for MongoDB + SQL hyrid system...argued against due to complexity and reduced flexibility.
-  - Open ended suggestion for SciDB.
+  - Open ended suggestion for [SciDB](http://forum.paradigm4.com/c/general) by [Amos](https://github.com/slottad/scidb-genotypes).
   
 3. _Ensembl mySQL database from a VCF_
   - [Script Usage](http://useast.ensembl.org/info/genome/variation/import_vcf.html?redirect=no) Page
