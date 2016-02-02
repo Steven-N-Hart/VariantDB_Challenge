@@ -16,7 +16,6 @@ Transform the VCF sampleFormat and INFO data into JSON for uploading to the data
 * The INFO field has some HTML links with some funky characters, so be careful when parsing
 * I transformed the AD field from an array [in the VCF] to AD_1 and AD_2 so I could query and index it easier
 * I gave the VCF a study name to merge with the sample names so I can prevent conflicts in the namespace
-* The `_key` value is unique because it is a merge of the chrom-pos-ref-alt-studyName-sampleName 
 ```
 time bgzip -dc 1KG.chr22.anno.infocol.vcf.gz |perl scripts/VCF2Arango.pl -VCF - -study 1000Genomes 
 
