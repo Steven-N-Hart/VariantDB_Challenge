@@ -13,9 +13,9 @@
 /.idea
 *.iml
 
-# Ignore Data Files
+# Ignore 1000 Genome Data Files
 *.vcf
 *.vcf.gz
-*json
+*.json
 README.sample_cryptic_relations
 phase1_integrated_calls.20101123.ALL.panel
