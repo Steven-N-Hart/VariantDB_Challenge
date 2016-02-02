@@ -16,3 +16,6 @@
 # Ignore Data Files
 *.vcf
 *.vcf.gz
+*json
+README.sample_cryptic_relations
+phase1_integrated_calls.20101123.ALL.panel
