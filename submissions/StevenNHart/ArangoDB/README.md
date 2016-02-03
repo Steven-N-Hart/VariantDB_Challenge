@@ -1,4 +1,4 @@
-Requires the following perl module:
+Requires the following perl modules:
 ```
 Scalar::Util
 ```
@@ -15,13 +15,14 @@ Transform the VCF sampleFormat and INFO data into JSON for uploading to the data
 * I skipped any data point that had a null value (`'.'`)
 * The INFO field has some HTML links with some funky characters, so be careful when parsing
 * I transformed the AD field from an array [in the VCF] to AD_1 and AD_2 so I could query and index it easier
-* I gave the VCF a study name to merge with the sample names so I can prevent conflicts in the namespace
+* I gave the VCF a study name to merge with the sample names so I can prevent conflicts in the namespace when adding new samples
+* I created a varID key by combining "chrom:pos:ref:alt" so I know what variant position I am talking about
 ```
 time bgzip -dc 1KG.chr22.anno.infocol.vcf.gz |perl scripts/VCF2Arango.pl -VCF - -study 1000Genomes 
 
-real	53m28.825s
-user	53m21.416s
-sys	0m21.003s
+real	38m15.276s
+user	38m6.785s
+sys	  0m22.358s
 
 ```
 

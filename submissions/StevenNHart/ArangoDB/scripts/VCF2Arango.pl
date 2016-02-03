@@ -2,7 +2,7 @@
 
 use Getopt::Long;
 use Scalar::Util qw(looks_like_number);
-
+#use Digest::MD5 qw(md5);
 
 GetOptions ("VCF|v=s" => \$vcf,    # string
             "study|s=s"  => \$study,      # string
@@ -35,7 +35,7 @@ sub formatParse{
 	#formatSchema is a ":" delimited grouping from teh VCF file
 	#sampleFormat is the data from teh VCF that follows the formatSchema
 	#keyName is the chrom:pos:ref:alt:study:sampleID
-	my ($formatSchema,$sampleFormat,$chr,$pos,$ref,$alt,$study,$sampleID) = @_ ;
+	my ($formatSchema,$sampleFormat,$study,$sampleID,$md5) = @_ ;
 	#Convert the formatSchema and sampleFormat into arrays
 	@formatSchema = split(":", $formatSchema);
 	@sampleFormat =	split(":", $sampleFormat);
@@ -48,14 +48,10 @@ sub formatParse{
 
 			#print special key identifier
 			@formatValues = ();
-			#Add chrom,pos,ref,alt,study,sample Identifiers
-			$chr = "chr:\"$chr\"";
-			$pos = "pos:". $pos;
-			$ref = "ref:\"$ref\"";
-			$alt = "alt:\"$alt\"";
+		
 			$study = "study:\"$study\"";
 			$sampleID = "sampleID:\"$sampleID\"";
-			push(@formatValues,$chr,$pos,$ref,$alt,$study,$sampleID);
+			push(@formatValues,$md5,$study,$sampleID);
 			#$key = "_key : \"$keyName\"";
 			#push(@formatValues,$key);
 			for ($i=0; $i < @formatSchema; $i++){
@@ -171,8 +167,8 @@ while(<VCF>){
 
 		#### Print out some standard errors to keep me up to dat with progress
 		if($. % 1000 == 0){
-			$lineNo = sprintf("%.0f", $./348234 *10);
-			print STDERR "Line Number $. of 348234 ($lineNo%)\n"
+			$lineNo = sprintf("%.0f", $./348234 * 100);
+			print STDERR "Line Number $. of 348234 ($lineNo%)\r";
 		}
 
 		#Skip if biallelic setting isn't disabled
@@ -183,22 +179,26 @@ while(<VCF>){
 		### This section will parse out the INFO field and return JSON
 		######################################################################
 		@INFO = split(";",$line[7]);
+		$md5 = join(":",$line[0],$line[1],$line[3],$line[4]);
+		#$md5 = md5($md5);
+		$md5 = "varID:\"$md5\"";
 		@infoJSON = ();
 		for($j = 0; $j<@INFO; $j++){
 			$var = infoParse(@INFO[$j]);
 			push(@infoJSON,$var);
 		}
-		$infoJSON = join(",",@infoJSON);
+
+		$infoJSON = join(",",$md5,@infoJSON);
 		print infoJSON "{$infoJSON}\n";
+
 		######################################################################
 		### This section will parse out the FORMAT fields and return JSON
 		######################################################################
-
 		for($j = 9; $j<@line; $j++){
 			$sampleName = $SAMPLES[$j];
 			#Make sure sample name doesn't have a -
 			$sampleName =~ s/-//g;
-			formatParse($line[8],$line[$j],@line[0,1,3,4],$study,$SAMPLES[$j]);			
+			formatParse($line[8],$line[$j],$study,$SAMPLES[$j],$md5);			
 		}
 	}
 }
