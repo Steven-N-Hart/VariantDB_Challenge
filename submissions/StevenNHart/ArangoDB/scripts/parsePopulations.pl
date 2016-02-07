@@ -8,7 +8,6 @@ GetOptions ("input|i=s" => \$input,    # string
 #Create help and usage statement
 sub help{
 	print "Usage: perl parsePopulations.pl -i <phase1_integrated_calls.20101123.ALL.panel> 
-		Options:
 
 	\n\n";
 	die;
@@ -40,7 +39,7 @@ while(<FILE>){
 	@jsonLine = ();
 	for ($i=0; $i<@line; $i++){
 		#For strings, the values need to be in quotes
-		$jsonLine=' '. @HEADERS[$i] . ':'. '"'.$line[$i]. '"';
+		$jsonLine=' "'. @HEADERS[$i] . '":'. '"'.$line[$i]. '"';
 		push (@jsonLine,$jsonLine);
 		}
 		$jsonLine =join(',', @jsonLine);

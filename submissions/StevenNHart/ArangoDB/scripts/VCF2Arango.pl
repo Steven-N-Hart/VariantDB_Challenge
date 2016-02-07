@@ -8,6 +8,7 @@ GetOptions ("VCF|v=s" => \$vcf,    # string
             "study|s=s"  => \$study,      # string
             "strict|z"  => \$strict,
             "biallele|b" => \$biallele,
+            "kill|k=i" => \$kill, 
             "help|h"  => \$help);   # flag
 
 #Create help and usage statement
@@ -16,6 +17,7 @@ sub help{
 		Options:
 				-strict|S 	strict enforcement of VCF schema
 				-biallele|b bi-allelic SNPS only [default]
+				-kill <int> 	kill after <int> rows
 	\n\n";
 	die;
 }
@@ -49,8 +51,8 @@ sub formatParse{
 			#print special key identifier
 			@formatValues = ();
 		
-			$study = "study:\"$study\"";
-			$sampleID = "sampleID:\"$sampleID\"";
+			$study = "\"study\":\"$study\"";
+			$sampleID = "\"sampleID\":\"$sampleID\"";
 			push(@formatValues,$md5,$study,$sampleID);
 			#$key = "_key : \"$keyName\"";
 			#push(@formatValues,$key);
@@ -79,7 +81,7 @@ sub singleOrMulti{
 	if($key =~ /^GT$/){
 		$AN = $values; $AN =~ s/\D//;$AN = length($AN);;
 		$AC = $values; $AC =~ s/[\D0]//g; $AC = length($AC);
-		$res = " GT : \"$values\", AC : $AC, AN : $AN";
+		$res =  "\"GT\" : \"$values\", \"AC\" : $AC, \"AN\" : $AN";
 		return $res;
 		next;
 	}
@@ -90,27 +92,27 @@ sub singleOrMulti{
 		#If the first value is a number, then they are all numbers
 		if(looks_like_number($values[0])){
 			if($key =~ /^AD$/){
-					$res = " AD_1 : $values[0],"." AD_2 : $values[1]";
+					$res = " \"AD_1\" : $values[0], \"AD_2\" : $values[1]";
 					return $res;
 				}else{
 					#Its just another array
 					$newValues = "[" . join(",",@values) ."]";
-					$newValues = "$key : $newValues";
+					$newValues = "\"$key\" : $newValues";
 					return $newValues;
 			}		
 		}else{
 			#Its an array of strings
 			$newValues = "[\"". join('","', @values) . "\"]";
-			$newValues = "$key : $newValues";
+			$newValues = "\"$key\" : $newValues";
 			return $newValues;
 		}
 	}else{
 		#Its a single value
 		if(looks_like_number($values)){
-			return " $key : $values";
+			return " \"$key\" : $values";
 		}else{
 			#its a single string value
-			return " $key : \"$values\"";
+			return " \"$key\" : \"$values\"";
 		}
 	}
 }
@@ -119,12 +121,14 @@ sub singleOrMulti{
 sub infoParse{
 	my ($infoItem) = @_;
 	my ($key, $value) = split(/=/, $infoItem, 2);
+	$value =~ s/\"/\\"/g;
+	$key=~s/\./_/g;
 	#Skip if the value is '.'
 	next if ($value eq '.');
 	#print "Key=$key\tValue=$value\n";
 	### Because VCF INFO fields can have flags, they don't have an '=' sign.  They need to be treated differently
 	if(!$value){
-		return "$key : true";
+		return "\"$key\" : true";
 	}else{
 		# It is a traditional key:value pair
 		my $result = singleOrMulti($key, $value);
@@ -155,6 +159,7 @@ open(infoJSON, ">info.json")or die "Cont open info.json";
 
 while(<VCF>){
 	chomp;
+	die if($. == $kill);
 	next if($_=~/^##/);
 	#Look for the CHROM line to get the sample names
 	if($_ =~ /^#CHROM/){
@@ -180,8 +185,7 @@ while(<VCF>){
 		######################################################################
 		@INFO = split(";",$line[7]);
 		$md5 = join(":",$line[0],$line[1],$line[3],$line[4]);
-		#$md5 = md5($md5);
-		$md5 = "varID:\"$md5\"";
+		$md5 = "\"_key\":\"$md5\"";
 		@infoJSON = ();
 		for($j = 0; $j<@INFO; $j++){
 			$var = infoParse(@INFO[$j]);
@@ -194,6 +198,8 @@ while(<VCF>){
 		######################################################################
 		### This section will parse out the FORMAT fields and return JSON
 		######################################################################
+		$md5 = join(":",$line[0],$line[1],$line[3],$line[4]);
+		$md5 = "\"varID\":\"$md5\"";
 		for($j = 9; $j<@line; $j++){
 			$sampleName = $SAMPLES[$j];
 			#Make sure sample name doesn't have a -

@@ -44,3 +44,91 @@ perl scripts/parsePopulations.pl -i phase1_integrated_calls.20101123.ALL.panel
 ```
 
 I now have 4 different json files to import into ArangoDB
+```
+#Start Arango
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangod 
+#change terminal and start the import process
+
+```
+
+
+#create single entries to prime the indexes
+```
+for x in *json
+do
+ echo $x
+ head -1 $x > ${x}.2
+ /Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file ${x}.2 --type json --collection ${x/.json/} --create-collection true
+ rm ${x}.2
+done
+```
+
+# add indexes to collections
+```
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangosh
+db.info.ensureIndex({ type: "hash", fields: [ "Effect_Impact"], sparse: true });
+db.info.ensureIndex({ type: "hash", fields: [ "ExAC_Info_AF" ] });
+db.info.ensureIndex({ type: "hash", fields: [ "SAVANT_IMPACT" ], sparse: true });
+exit
+```
+
+#Load full collections
+```
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file "cryptic.json" --type json --collection cryptic --progress true 
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file "populations.json" --type json --collection populations --progress true 
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file "info.json" --type json --collection info --progress true
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true 
+/Applications/ArangoDB-CLI.app/Contents/MacOS/arangosh
+```
+#Formalate Queries
+```
+LET sampleLIST = (
+	LET samples =(FOR sample IN cryptic
+    FILTER sample.Population != "ASW" && sample.Relationship != "Sibling"
+    COLLECT s1 = sample.Sample_1, s2 = sample.Sample_2 
+    RETURN [s1,s2]
+    )
+	RETURN(FLATTEN(samples,2))
+)
+
+LET sampleCounts = (
+FOR format IN sampleFormat
+    FILTER format.GQ >= 30 && format.GT == '0|1' || '0/1' && format.sampleID IN sampleLIST
+        FOR info in info
+            FILTER format.varID == info._key
+            FILTER info.Effect_Impact IN ["HIGH","MODERATE"]
+            FILTER info.AF < 0.1 || null
+            RETURN format.sampleID 
+)
+
+LET sampleSummaryCounts = (
+    for u in sampleCounts
+        COLLECT sample = u WITH COUNT INTO length
+        RETURN { sample: sample, length: length } 
+)
+
+LET majorPop = (
+    FOR pop IN populations 
+        RETURN DISTINCT pop.Pop2
+ )
+ 
+LET popCounts = (
+    FOR u IN sampleSummaryCounts
+        FOR pop IN populations 
+            FILTER u.sample == pop.SAMPLE
+            COLLECT sample = u.sample, length = u.length, Pop = pop.Pop2 
+            RETURN {length:length, pop:Pop}
+)
+
+FOR x IN majorPop
+    FOR y IN popCounts
+        FILTER x == y.pop
+        COLLECT  pop = x 
+        AGGREGATE len = SUM(y.length)
+        RETURN {"P":pop,"c":len}
+
+ 
+
+```
+
+

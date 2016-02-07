@@ -47,7 +47,7 @@ while(<FILE>){
 		for ($i=0; $i<@line; $i++){
 			#For strings, the values need to be in quotes
 			if($i<4){$newLine = ' "'.@line[$i].'"'}else{$newLine=@line[$i]}
-			$jsonLine=' '. @HEADERS[$i] . ':'. $newLine;
+			$jsonLine=' "'. @HEADERS[$i] . '":'. $newLine;
 			push (@jsonLine,$jsonLine);
 		}
 		$jsonLine =join(',', @jsonLine);
