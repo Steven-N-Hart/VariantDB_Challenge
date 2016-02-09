@@ -80,7 +80,7 @@ exit
 /Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true 
 /Applications/ArangoDB-CLI.app/Contents/MacOS/arangosh
 ```
-#Formalate Queries
+#Formulate Queries
 ```
 LET sampleLIST = (
 	LET samples =(FOR sample IN cryptic
