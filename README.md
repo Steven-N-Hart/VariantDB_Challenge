@@ -13,13 +13,15 @@ It's pretty clear, we need to move to a database if we want to stay on top of th
 
 > Why not just throw all your data into a MySQL database?  Won't that work?
 
-Technically, yes but pragmatically no. The key limitation is that the RDBMS approach scales __*up*__ rather than scaling __*out*__ for this particular use case.  Genomics is somewhat heterogeneous, constantly evolving and growing, and needs to leverage distributed computing and storage.  But if not MySQL, then what? *This is what this project is all about!*
+Technically, yes but pragmatically no. The key limitation is that the RDBMS approach scales __*up*__ rather than scaling __*out*__ for this particular use case.  Genomics is somewhat heterogeneous, constantly evolving and growing, and needs to leverage distributed computing and storage.   *Finding a solution that takes advbantage of these key concepts is what this project is all about!*
 
 The future of genomics depends on our ability to leverage distributed storage and computing, so what database architecture is best?  Let's find out by addressing the following challenges:
 
-- __Challenge #1.  The multiple source integration problem.__
+- __Challenge #1.  [The multiple source integration problem](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki#challenge-1-the-multiple-source-integration-problem).__
 
-- __Challenge #2.  The cost projection problem.__
+- __Challenge #2.  [The continuous integration problem](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki#challenge-2-the-continuous-integration-problem).__
+
+- __Challenge #3.  [The cost projection problem](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki#challenge-3-the-cost-projection-problem).__
 
 The purpose of this challenge is not an ideological one, rather an empirical one.  We are looking for submissions from experts of various architectures to [submit solutions](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki/Rules) to address these challenges.  If you think you have a better solution an those that currently exist, please follow the instructions to submit your own response.
 
