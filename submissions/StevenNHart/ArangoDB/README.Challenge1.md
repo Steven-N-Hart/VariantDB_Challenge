@@ -94,7 +94,7 @@ LET sampleLIST = (
 
 LET sampleCounts = (
 FOR format IN sampleFormat
-    FILTER format.GQ >= 30 && (format.GT == '0|1' || format.GT == '0/1') && format.sampleID IN sampleLIST[0]
+    FILTER format.GQ >= 30 && format.GT IN ['0|1', '0/1'] && format.sampleID IN sampleLIST[0]
         FOR info in info
             FILTER format.varID == info._key
             FILTER info.Effect_Impact IN ["HIGH","MODERATE"]
