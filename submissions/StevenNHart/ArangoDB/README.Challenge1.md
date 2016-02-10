@@ -69,6 +69,7 @@ done
 db.info.ensureIndex({ type: "hash", fields: [ "Effect_Impact"], sparse: true });
 db.info.ensureIndex({ type: "hash", fields: [ "ExAC_Info_AF" ] });
 db.info.ensureIndex({ type: "hash", fields: [ "SAVANT_IMPACT" ], sparse: true });
+db.sampleFormat.ensureIndex({ type: "hash", fields: [ "sampleID" ] });
 exit
 ```
 
@@ -93,11 +94,11 @@ LET sampleLIST = (
 
 LET sampleCounts = (
 FOR format IN sampleFormat
-    FILTER format.GQ >= 30 && format.GT == '0|1' || '0/1' && format.sampleID IN sampleLIST
+    FILTER format.GQ >= 30 && (format.GT == '0|1' || format.GT == '0/1') && format.sampleID IN sampleLIST[0]
         FOR info in info
             FILTER format.varID == info._key
             FILTER info.Effect_Impact IN ["HIGH","MODERATE"]
-            FILTER info.AF < 0.1 || null
+            FILTER info.AF < 0.1
             RETURN format.sampleID 
 )
 
