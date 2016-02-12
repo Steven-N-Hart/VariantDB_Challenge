@@ -44,6 +44,9 @@ perl scripts/parsePopulations.pl -i phase1_integrated_calls.20101123.ALL.panel
 ```
 
 I now have 4 different json files to import into ArangoDB
+
+# TODO: Install sharded cluster
+
 ```
 #Start Arango
 /Applications/ArangoDB-CLI.app/Contents/MacOS/arangod 
