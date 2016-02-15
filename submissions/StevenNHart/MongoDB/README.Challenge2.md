@@ -5,9 +5,16 @@ Scalar::Util
 
 Get input files
 ```
-wget -O NA12878.chr22.g.vcf.gz http://bioinformaticstools.mayo.edu/research/wp-content/plugins/download.php?url=https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/gvcfs/NA12878.chr22.g.vcf.gz
-wget -O NA12891.chr22.g.vcf.gz http://bioinformaticstools.mayo.edu/research/wp-content/plugins/download.php?url=https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/gvcfs/NA12891.chr22.g.vcf.gz
-wget -O NA12892.chr22.g.vcf.gz http://bioinformaticstools.mayo.edu/research/wp-content/plugins/download.php?url=https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/gvcfs/NA12892.chr22.g.vcf.gz
+wget -O NA12878.chr22.g.vcf.gz https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/gvcfs/NA12878.chr22.g.vcf.gz
+wget -O NA12891.chr22.g.vcf.gz https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/gvcfs/NA12891.chr22.g.vcf.gz
+wget -O NA12892.chr22.g.vcf.gz https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/gvcfs/NA12892.chr22.g.vcf.gz
+
+```
+#Start Mongodb (db version v3.0.4)
+
+```
+sudo mongod
+#change terminal and start the import process
 
 ```
 
@@ -25,25 +32,36 @@ done
 
 # TODO: Install sharded cluster
 
-#create single entries to prime the indexes
+
+
+#Import the full JSON
 ```
-for x in *json
-do
- echo $x
- head -1 $x > ${x}.2
- mongoimport -d test -c ${x/.json/} ${x}.2 
- rm ${x}.2
-done
+mongoimport -d challenge2 -c block block.json --drop
+mongoimport -d challenge2 -c sampleFormat sampleFormat.json --drop
 ```
 
 # add indexes to collections
 ```
-mongo --eval 'db.block.ensureIndex({ sample: 1 })'
-mongo --eval 'db.block.ensureIndex({ chr: 1 })'
-mongo --eval 'db.block.ensureIndex({ start: 1 })'
-mongo --eval 'db.block.ensureIndex({ end: 1 })'
-mongo --eval 'db.sampleFormat.ensureIndex({ sampleID: 1 })'
-mongo --eval 'db.sampleFormat.ensureIndex({ study: 1 })'
-mongo --eval 'db.sampleFormat.ensureIndex({ GT: 1 })'
-mongo --eval 'db.sampleFormat.ensureIndex({ AD_2: 1 })'
+mongo challenge2 --eval 'db.block.ensureIndex({ sample: 1 })'
+mongo challenge2  --eval 'db.block.ensureIndex({ chr: 1 })'
+mongo challenge2  --eval 'db.block.ensureIndex({ start: 1 })'
+mongo challenge2  --eval 'db.block.ensureIndex({ end: 1 })'
+mongo challenge2  --eval 'db.sampleFormat.ensureIndex({ sampleID: 1 })'
+mongo challenge2  --eval 'db.sampleFormat.ensureIndex({ study: 1 })'
+mongo challenge2  --eval 'db.sampleFormat.ensureIndex({ GT: 1 })'
+mongo challenge2 --eval 'db.sampleFormat.ensureIndex({ AD_2: 1 })'
+```
+
+
+#Build your queries
+```
+#strategy based from https://www.youtube.com/watch?v=0YFcYoxlB74
+
+#Get heterozygous variants in NA12878i
+ var hets = db.sampleFormat.aggregate([{ $match: {$and : [{ "GT": { $in: ["0/1", "0|1"] } },{"_id.sample" : "NA12878i"}]} }])
+ var hets_detail = hets.next() 
+
+ var regions = 
+
+
 ```

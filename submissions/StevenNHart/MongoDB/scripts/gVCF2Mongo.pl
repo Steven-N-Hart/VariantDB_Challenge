@@ -51,9 +51,9 @@ sub formatParse{
 			#print special key identifier
 			@formatValues = ();
 		
-			$study = "\"study\":\"$study\"";
-			$sampleID = "\"sampleID\":\"$sampleID\"";
-			push(@formatValues,$md5,$study,$sampleID);
+			#$study = "\"study\":\"$study\"";
+			#$sampleID = "\"sampleID\":\"$sampleID\"";
+			push(@formatValues,$md5);
 			#$key = "_key : \"$keyName\"";
 			#push(@formatValues,$key);
 			for ($i=0; $i < @formatSchema; $i++){
@@ -217,8 +217,7 @@ while(<VCF>){
 		######################################################################
 		### This section will parse out the FORMAT fields and return JSON
 		######################################################################
-		$md5 = join(":",$line[0],$line[1],$line[3],$line[4]);
-		$md5 = "\"_id\":\"$md5\"";
+
 
 		
 
@@ -226,6 +225,16 @@ while(<VCF>){
 			$sampleName = $SAMPLES[$j];
 			#Make sure sample name doesn't have a -
 			$sampleName =~ s/-//g;
+			$chr='"chr":"'.$line[0].'"';
+			$pos='"pos":'.$line[1];
+			$ref='"ref":"'.$line[3].'"';
+			$alt='"alt":"'.$line[4].'"';
+			$study_name='"study":"'.$study.'"';
+			$sample_name='"sample":"'.$sampleName.'"';
+			$md5 = join(",",$chr,$pos,$ref,$alt,$study_name,$sample_name);
+			
+			$md5 = "\"_id\":{$md5}";
+
 			if ($line[7]=~/END=/){
 				blocks($SAMPLES[$j],$line[0],$line[1],$line[7],$line[8],$line[$j]);
 			}
