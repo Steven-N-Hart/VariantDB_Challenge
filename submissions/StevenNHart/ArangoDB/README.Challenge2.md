@@ -40,29 +40,37 @@ k.launch();
 db._create("block",{numberOfShards:4});
 db._create("sampleFormat",{numberOfShards:2});
 db.block.ensureIndex({ type: "hash", fields: [ "sample","chr","start","end"], sparse: true });
-db.sampleFormat.ensureIndex({ type: "hash", fields: [ "sampleID","varID","study","GT","AD_2"], sparse: true });
+db.sampleFormat.ensureIndex({ type: "hash", fields: [ "chr", "start","sampleID","study","GT","AD_2"], sparse: true });
+exit
 
-```
-
-
-#create single entries to prime the indexes
-```
-for x in *json
-do
- echo $x
- head -1 $x > ${x}.2
- /Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file ${x}.2 --type json --collection ${x/.json/} 
- rm ${x}.2
-done
 ```
 
 
 #Load full collections
 ```
-arangoimp --file "block.json" --type json --collection block --progress true
-arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true 
+arangoimp --file "block.json" --type json --collection block --progress true --create-collection true
+arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true --create-collection true
 arangosh
 
+```
 
+#Run queries
+```
+
+#NOT YET COMPLETE
+
+FOR sample in sampleFormat
+    FILTER sample.sampleID == "NA12878i" 
+    FILTER sample.GT IN ['0/1','1/1']
+    FOR bloc IN block
+        FILTER sample.chr == bloc.chr && sample.start >= bloc.start && sample.start <= bloc.end && bloc.sampleID != "NA12878i"
+        COLLECT variantS = sample.sampleID,
+                variantsC = sample.chr,
+                variantsP = sample.start,
+                hRefS = bloc.sample,
+                hRefF = bloc.format,
+                hRefG = bloc.sampleFormat
+                LIMIT 20
+        RETURN [variantS, variantsC,variantsP,hRefS,hRefF,hRefG]
 
 ```

@@ -36,7 +36,7 @@ sub formatParse{
 	#formatSchema is a ":" delimited grouping from teh VCF file
 	#sampleFormat is the data from teh VCF that follows the formatSchema
 	#keyName is the chrom:pos:ref:alt:study:sampleID
-	my ($formatSchema,$sampleFormat,$study,$sampleID,$md5) = @_ ;
+	my ($formatSchema,$sampleFormat,$study,$sampleID,$md5,$chr,$pos,$end_pos) = @_ ;
 	next if ($md5=~/NON_REF/);
 	#Convert the formatSchema and sampleFormat into array
 	@formatSchema = split(":", $formatSchema);
@@ -53,7 +53,10 @@ sub formatParse{
 		
 			$study = "\"study\":\"$study\"";
 			$sampleID = "\"sampleID\":\"$sampleID\"";
-			push(@formatValues,$md5,$study,$sampleID);
+			$l = '"chr":"'.$chr.'","start":'.$pos;
+
+
+			push(@formatValues,$l,$study,$sampleID);
 			#$key = "_key : \"$keyName\"";
 			#push(@formatValues,$key);
 			for ($i=0; $i < @formatSchema; $i++){
@@ -121,7 +124,7 @@ sub blocks{
 	my ($sampleName,$chr,$pos,$end,$format,$sampleFormat) = @_;
 	@end=split('=',$end);
 	$end_pos=$end[1];
-	$block ='"sample":"'.$sampleName.'","chr":"'.$chr.'","start":'.$pos.', "end":'.$end_pos.',"format":"'.$format.'", "sampleFormat":"'.$sampleFormat.'"';
+	$block ='"sample":"'.$sampleName.'","chr":"'.$chr.'","start":'.$pos.',"end":'.$end_pos.',"format":"'.$format.'", "sampleFormat":"'.$sampleFormat.'"';
 print blockJSON "{$block}\n"; 
 }
 
@@ -229,7 +232,7 @@ while(<VCF>){
 			if ($line[7]=~/END=/){
 				blocks($SAMPLES[$j],$line[0],$line[1],$line[7],$line[8],$line[$j]);
 			}
-			formatParse($line[8],$line[$j],$study,$SAMPLES[$j],$md5);			
+			formatParse($line[8],$line[$j],$study,$SAMPLES[$j],$md5,$line[0],$line[1]);			
 		}
 	}
 }
