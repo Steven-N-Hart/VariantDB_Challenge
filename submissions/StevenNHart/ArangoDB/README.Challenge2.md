@@ -11,7 +11,7 @@ wget -O NA12892.chr22.g.vcf.gz http://bioinformaticstools.mayo.edu/research/wp-c
 
 ```
 
-#Filter the gVCFs to contain genotype quality values > 20 and then create JSON files
+Filter the gVCFs to contain genotype quality values > 20 and then create JSON files
 ```
 for x in *gz
 do
@@ -22,9 +22,8 @@ do
 done
 
 ```
-# Set up arangodb cluster by turnging off some default features
+Set up arangodb cluster by turnging off some default features (You will need to change the location)
 
-# TODO: Install sharded cluster
 ```
 CONF=/Applications/ArangoDB-CLI.app/Contents/MacOS//opt/arangodb/etc/arangodb/arangod.conf
 
@@ -39,14 +38,19 @@ k = new Kickstarter(p.getPlan());
 k.launch();
 db._create("block",{numberOfShards:4});
 db._create("sampleFormat",{numberOfShards:2});
-db.block.ensureIndex({ type: "hash", fields: [ "sample","chr","start","end"], sparse: true });
-db.sampleFormat.ensureIndex({ type: "hash", fields: [ "chr", "start","sampleID","study","GT","AD_2"], sparse: true });
+db.block.ensureIndex({ type: "skiplist", fields: [ "start","end" ], sparse: false });
+
+db.sampleFormat.ensureIndex({ type: "skiplist", fields: [ "chr" ], sparse: false });
+db.sampleFormat.ensureIndex({ type: "skiplist", fields: [ "start" ], sparse: false });
+db.sampleFormat.ensureIndex({ type: "skiplist", fields: [ "sampleID" ], sparse: false });
+
+
 exit
 
 ```
 
 
-#Load full collections
+Load full collections
 ```
 arangoimp --file "block.json" --type json --collection block --progress true --create-collection true
 arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true --create-collection true
@@ -54,23 +58,22 @@ arangosh
 
 ```
 
-#Run queries
+Run queries
 ```
-
-#NOT YET COMPLETE
-
 FOR sample in sampleFormat
     FILTER sample.sampleID == "NA12878i" 
     FILTER sample.GT IN ['0/1','1/1']
-    FOR bloc IN block
-        FILTER sample.chr == bloc.chr && sample.start >= bloc.start && sample.start <= bloc.end && bloc.sampleID != "NA12878i"
-        COLLECT variantS = sample.sampleID,
-                variantsC = sample.chr,
-                variantsP = sample.start,
-                hRefS = bloc.sample,
-                hRefF = bloc.format,
-                hRefG = bloc.sampleFormat
-                LIMIT 20
-        RETURN [variantS, variantsC,variantsP,hRefS,hRefF,hRefG]
+    LET SAMPLES = (
+        FOR bloc IN block
+            FILTER sample.start >= bloc.start && sample.start <= bloc.end && sample.chr == bloc.chr && bloc.sampleID != "NA12878i"
+            RETURN bloc
+    )
+    FILTER LENGTH(SAMPLES) > 1
+    RETURN {
+    "chr": sample.chr,
+    "pos" : sample.start,
+    "GT" : sample.GT,
+    "s" : SAMPLES
+    }
 
 ```
