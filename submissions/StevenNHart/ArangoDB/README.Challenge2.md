@@ -54,7 +54,6 @@ Load full collections
 ```
 arangoimp --file "block.json" --type json --collection block --progress true --create-collection true
 arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true --create-collection true
-arangosh
 
 ```
 
@@ -77,3 +76,11 @@ FOR sample in sampleFormat
     }
 
 ```
+# Results
+Turns out I broke ArangoDB.  While working on Challenge #2, I found something strange about the way 
+arango works that I was hoping you could explain. In my _system db I 
+have 2 collections: sampleFormat and block. The sampleFormat collection 
+has 4656 records (1.2MB size), plus 3 indexes (973Kb). The block 
+collection has 19263 records(3.55MB) with 3 indexes (4.25Mb). My Mac 
+has 16GB of total memory, and yet it could never complete this task because the memory usage ballooned > 16GB.  After contacting the ArangoDB developers, they assured me that several improvements were underway regarding how ArangoDB uses its memory when streaming data in and out.  
+We will have to re-visit this as the technology matures, but it is pretty evident that ArangoDB is not ready for Big Data.

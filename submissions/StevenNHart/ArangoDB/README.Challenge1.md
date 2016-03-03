@@ -49,7 +49,7 @@ I now have 4 different json files to import into ArangoDB
 
 ```
 #Start Arango
-/Applications/ArangoDB-CLI.app/Contents/MacOS/arangod 
+arangod 
 #change terminal and start the import process
 
 ```
@@ -70,7 +70,7 @@ done
 ```
 /Applications/ArangoDB-CLI.app/Contents/MacOS/arangosh
 db.info.ensureIndex({ type: "hash", fields: [ "Effect_Impact"], sparse: true });
-db.info.ensureIndex({ type: "hash", fields: [ "ExAC_Info_AF" ] });
+db.info.ensureIndex({ type: "skiplist", fields: [ "ExAC_Info_AF" ] });
 db.info.ensureIndex({ type: "hash", fields: [ "SAVANT_IMPACT" ], sparse: true });
 db.sampleFormat.ensureIndex({ type: "hash", fields: [ "sampleID" ] });
 exit
@@ -84,7 +84,8 @@ exit
 /Applications/ArangoDB-CLI.app/Contents/MacOS/arangoimp --file "sampleFormat.json" --type json --collection sampleFormat --progress true 
 /Applications/ArangoDB-CLI.app/Contents/MacOS/arangosh
 ```
-#Formulate Queries
+#Formulate Queries in the Web interface 
+TODO: Convert this into JavaScript so I can run on command line
 ```
 LET sampleLIST = (
 	LET samples =(FOR sample IN cryptic
