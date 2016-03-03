@@ -38,17 +38,18 @@ The last transformation is for the population descriptions
 ```
 perl scripts/parsePopulations.pl -i phase1_integrated_calls.20101123.ALL.panel
 ```
+I now have 4 different json files to import into MongoDB
 
-I now have 4 different json files to import into ArangoDB
-```
+
 #Start Mongodb
+
+```
 sudo mongod
 #change terminal and start the import process
 
 ```
 
-
-#create single entries to prime the indexes
+#Create single entries to prime the indexes
 ```
 for x in *json
 do
@@ -59,13 +60,11 @@ do
 done
 ```
 
-# add indexes to collections
+#Add indexes to collections
 ```
-
 mongo --eval 'db.info.ensureIndex({ Effect_Impact: 1 })'
 mongo --eval 'db.info.ensureIndex({ ExAC_Info_AF: 1 })'
 mongo --eval 'db.info.ensureIndex({ SAVANT_IMPACT: 1 })'
-
 ```
 
 #Load full collections
@@ -74,31 +73,10 @@ mongoimport -d test -c info info.json
 mongoimport -d test -c sampleFormat sampleFormat.json
 mongoimport -d test -c cryptic cryptic.json
 mongoimport -d test -c populations populations.json
-
 ```
 
 #Build the query
 ```
-mongo
-#Find the samples to keep
-var getSample = function(doc) { return doc.samples; }
-
-var excludeSamples = db.cryptic.aggregate([
-    {   $match: {"Relationship": "Sibling","Population":"ASW"} },
-  {
-        "$group": {
-      "_id": "$Population", 
-      "Sample_1": { "$addToSet": "$Sample_1" }, 
-      "Sample_2": { "$addToSet": "$Sample_2" }
-    }
-  },
-  { 
-    "$project": {
-      "samples": { "$setUnion": [ "$Sample_1", "$Sample_2" ] }, 
-      "_id": 0
-    }
-   }
- ]).map(getSample)[0]
-
+mongo --quiet test < scripts/challenge1.js
 ```
 

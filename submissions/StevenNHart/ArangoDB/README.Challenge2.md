@@ -78,7 +78,7 @@ FOR sample in sampleFormat
 ```
 # Results
 Turns out I broke ArangoDB.  While working on Challenge #2, I found something strange about the way 
-arango works that I was hoping you could explain. In my _system db I 
+ArangoDB works that I was hoping you could explain. In my _system db I 
 have 2 collections: sampleFormat and block. The sampleFormat collection 
 has 4656 records (1.2MB size), plus 3 indexes (973Kb). The block 
 collection has 19263 records(3.55MB) with 3 indexes (4.25Mb). My Mac 
