@@ -1,5 +1,7 @@
 # VariantDB_Challenge
 
+### Follow me on twitter (@Variant_Chall) to recieve status updates on the project 
+
 This repo is designed to serve as a testing framework for different database schemas, architectures, and query formulations within the context of mining genomics data.  For some reason, we in the genomics community (with a few outliers) are stuck in a file-based *modus operandi*.  Most people store variants in either a [VCF](http://samtools.github.io/hts-specs/VCFv4.2.pdf) or [gVCF](http://gatkforums.broadinstitute.org/firecloud/discussion/4017/what-is-a-gvcf-and-how-is-it-different-from-a-regular-vcf).  However there are numerous reasons why this is a bad long-term solution.
 
 1. __VCF files need to be filtered in many different ways depending on the study question__
