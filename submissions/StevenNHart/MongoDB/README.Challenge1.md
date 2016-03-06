@@ -91,4 +91,8 @@ mongoimport -d test -c populations populations.json
 ```
 mongo --quiet test < scripts/challenge1.js
 ```
+#Result
 
+```
+{ "EUR" : 3194, "ASN" : 2083, "AMR" : 63, "AFR" : 4081 }
+```
