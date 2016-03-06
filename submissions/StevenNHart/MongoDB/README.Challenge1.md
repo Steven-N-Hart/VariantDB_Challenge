@@ -2,6 +2,8 @@ Requires the following perl modules:
 ```
 Scalar::Util
 ```
+Also uses mongo 3.2.3
+> curl -O https://fastdl.mongodb.org/osx/mongodb-osx-x86_64-3.2.3.tgz
 
 Get input files
 ```
@@ -65,6 +67,16 @@ done
 mongo --eval 'db.info.ensureIndex({ Effect_Impact: 1 })'
 mongo --eval 'db.info.ensureIndex({ ExAC_Info_AF: 1 })'
 mongo --eval 'db.info.ensureIndex({ SAVANT_IMPACT: 1 })'
+
+mongo --eval 'db.sampleFormat.ensureIndex({ chr: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ pos: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ ref: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ alt: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ GT: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ AD_1: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ GQ: 1 })'
+mongo --eval 'db.sampleFormat.ensureIndex({ sampleID: 1 })'
+
 ```
 
 #Load full collections

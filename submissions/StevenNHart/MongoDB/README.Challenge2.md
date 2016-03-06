@@ -40,7 +40,7 @@ mongoimport -d challenge2 -c block block.json --drop
 mongoimport -d challenge2 -c sampleFormat sampleFormat.json --drop
 ```
 
-# add indexes to collections
+#Add indexes to collections
 ```
 mongo challenge2 --eval 'db.block.ensureIndex({ sample: 1 })'
 mongo challenge2  --eval 'db.block.ensureIndex({ chr: 1 })'
