@@ -35,3 +35,13 @@ If you are a fan of open science, Hadoop, Spark, and other Big Data projects, th
 
 
 #### See the [Wiki](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki) and [Rules](https://github.com/Steven-N-Hart/VariantDB_Challenge/wiki/Rules) pages for more details.
+
+
+
+### Current Progress
+ Technology | Submitter | Schema | Import | Query | Cost Projection 
+------------ |:-------------:|:------------:|:-------------:|:------------:|:-------------:
+ SQLite | ? | | | | 
+ ArrangoDB | StevenNHart | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
+ MongoDB | StevenNHart | :white_check_mark: | :white_check_mark: | | 
+ MySQL | raymond301 | :white_check_mark: |  | | 
