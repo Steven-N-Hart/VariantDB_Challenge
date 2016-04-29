@@ -57,7 +57,7 @@ if [ ! -d data/db ]
 then
 	mkdir -p data/db
 fi 
-sh create_cluster.sh 
+sh scripts/create_cluster.sh 
 ```
 > Note, for testing, be sure to set the data (-D) directory path. Run `sh create_cluster.sh  -h` for details.
 
