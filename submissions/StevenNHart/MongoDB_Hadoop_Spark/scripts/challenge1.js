@@ -29,7 +29,7 @@ var getSamplesThatMatchInfo = function(q){
 var POPS = db.populations.distinct("Pop2")
 var finalResult = {}
 
-for (i=0;i<POPS.length;i++){
+for (var i=0;i<POPS.length;i++){
   finalResult[POPS[i]] = 0
 }
 
