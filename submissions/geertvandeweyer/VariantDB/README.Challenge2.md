@@ -14,7 +14,7 @@ cfr README.Challenge1.md. The same instance should be used.
 Samples are loaded remotely into VariantDB. No need to download & parse locally.
 
 ```
-perl scripts/Import.Data.pl -s files/Challenge_2/SampleSheet.txt -u 'http://ec2-54-221-66-111.compute-1.amazonaws.com//variantdb' -p Challenge_2 -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ
+perl scripts/Import.Data.pl -s files/Challenge_2/SampleSheet.txt -u 'http://web_dns/variantdb' -p Challenge_2 -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ
 ```
 
 ##### Some  notes:
@@ -26,7 +26,7 @@ perl scripts/Import.Data.pl -s files/Challenge_2/SampleSheet.txt -u 'http://ec2-
 #### Set parental relations between samples.
 
 ```
-perl scripts/Challenge_2.SetRelations.pl -u 'http://ec2-54-221-66-111.compute-1.amazonaws.com//variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_2'
+perl scripts/Challenge_2.SetRelations.pl -u 'http://web_dns/variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_2'
 ```
 
 ##### Some  notes:
@@ -36,7 +36,7 @@ perl scripts/Challenge_2.SetRelations.pl -u 'http://ec2-54-221-66-111.compute-1.
 #### Launch the query
 
 ```
-perl scripts/Challenge_2.Run.Query.pl -u 'http://ec2-54-221-66-111.compute-1.amazonaws.com//variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_2'
+perl scripts/Challenge_2.Run.Query.pl -u 'http://web_dns/variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_2'
 ```
 
 ##### Some notes: 

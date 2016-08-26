@@ -4,9 +4,55 @@ VariantDB is a mysql-based web & api based querying tool. Installation takes som
 
 ## Launch AWS instances
 
+Launch the following community AMIs into the same (subnet setting, e.g. both in us-east-1b), using r3.xlarge (4CPU, 30Gb RAM) for both.: 
+* VariantDB_Challenge_vdb_web - ami-1b8cee0c
+* VariantDB_Challenge_vdb_db - ami-268cee31
+
+Add both instances to a security group with the following permissions:
+* inbound: SSH from 'My IP'.
+* inbound: http from 'Anywhere'.
+* inbound: MYSQL from 'Anywhere' 
+* outbound: All Traffic to 'Anywhere'
+
+
+NOTE: I know that mysql from anywhere is not optimal, but I had issues setting up the security groups. Any help/suggestions here on how to keep static (private) ips between groups of instances would be very welcome :-)
 
 
 ####### Get needed ip-adresses.
+
+Identify images under 'description' using 'AMI ID'. 
+
+
+* Write down the public IP of the database image (identify under 'description' using 'AMI ID'. The field you need is 'Public DNS')
+* Write down the public IP and DNS of the web image.
+
+####### Log into the WebServer to configure database connection.
+
+Using SSH, do the following
+* log in to the instance.
+* set the ip of the database server in the VarianDB config file.
+```
+ssh -i /path/to/your/pem_file ubuntu@public_dns_of_web
+sudo vim /VariantDB/.Credentials/.credentials
+```
+
+* Set DBHOST to the correct IP adress.
+
+* log out.
+
+ 
+####### Credentials for the web interfaces.
+
+The following credentials can be used to explore the user interface:
+* URL : http://public_dns_of_web_instance/variantdb
+* USER : variantdb@challenge.com
+* PASS : 698oodKpOy
+
+The following credentials can be used to explore the database using phpmyadmin
+* URL : http://ip_of_database_instance/phpmyadmin
+* USER : root
+* PASS : taootU32NG
+
 
 ## Import the data
 
@@ -15,7 +61,7 @@ VariantDB is a mysql-based web & api based querying tool. Installation takes som
 Samples are loaded remotely into VariantDB. No need to download & parse locally.
 
 ```
-perl scripts/Import.Data.pl -s files/Challenge_1/SampleSheet.txt -u 'http://ec2-54-221-66-111.compute-1.amazonaws.com//variantdb' -p Challenge_1 -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -c 'SAVANT_EFFECT=list,SAVANT_IMPACT=list,ExAC.Info.AF=decimal'
+perl scripts/Import.Data.pl -s files/Challenge_1/SampleSheet.txt -u 'http://web_dns/variantdb' -p Challenge_1 -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -c 'SAVANT_EFFECT=list,SAVANT_IMPACT=list,ExAC.Info.AF=decimal'
 ```
 
 ##### Some  notes:
@@ -30,7 +76,7 @@ perl scripts/Import.Data.pl -s files/Challenge_1/SampleSheet.txt -u 'http://ec2-
 #### Add population information.
 
 ```
-perl scripts/Challenge_1.SetRelations.pl -u 'http://ec2-54-221-66-111.compute-1.amazonaws.com//variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_1'
+perl scripts/Challenge_1.SetRelations.pl -u 'http://web_dns/variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_1'
 ```
 
 ##### Some  notes:
@@ -39,7 +85,7 @@ perl scripts/Challenge_1.SetRelations.pl -u 'http://ec2-54-221-66-111.compute-1.
 #### Launch the queries
 
 ```
-perl scripts/Challenge_1.Run.Query.pl -u 'http://ec2-54-221-66-111.compute-1.amazonaws.com//variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_1'
+perl scripts/Challenge_1.Run.Query.pl -u 'http://web_dns/variantdb' -a 5yeDJluF0kJOObbJZIKYWILhIZSaDYLJ -d 'files/Challenge_1'
 ```
 
 ##### Some notes: 
@@ -57,5 +103,5 @@ perl scripts/Challenge_1.Run.Query.pl -u 'http://ec2-54-221-66-111.compute-1.ama
 EUR : 0
 ASN : 3
 AMR : 0
-AFR": 5 
+AFR : 5 
 ```
