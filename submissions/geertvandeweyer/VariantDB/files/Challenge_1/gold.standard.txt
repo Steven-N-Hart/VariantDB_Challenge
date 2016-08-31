@@ -1,0 +1,16 @@
+PASS: line 22685 : 22:18609661 : G/A : NA19072 : ASN : Savant: MODERATE ; AF: 3.946e-04 ; GQ: 60 ; GT: 1|0 ; AD: 15,16 ; DP: 26 
+PASS: line 38751 : 22:20457855 : T/A : NA19093 : AFR : Savant: MODERATE ; AF: 0.024 ; GQ: 60 ; GT: 1|0 ; AD: 15,16 ; DP: 21 
+PASS: line 48441 : 22:21989154 : C/T : NA19900 : AFR : Savant: MODERATE ; AF: 0.010 ; GQ: 60 ; GT: 1|0 ; AD: 20,15 ; DP: 30 
+PASS: line 48442 : 22:21989179 : T/A : NA19900 : AFR : Savant: MODERATE ; AF: 2.731e-03 ; GQ: 60 ; GT: 1|0 ; AD: 19,18 ; DP: 33 
+PASS: line 246658 : 22:42910142 : C/T : NA19900 : AFR : Savant: MODERATE ; AF: 0.014 ; GQ: 60 ; GT: 1|0 ; AD: 20,12 ; DP: 25 
+PASS: line 279087 : 22:45723898 : G/A : NA19010 : ASN : Savant: MODERATE ; AF: 4.703e-03 ; GQ: 60 ; GT: 1|0 ; AD: 29,12 ; DP: 17 
+PASS: line 279847 : 22:45818230 : T/A : NA19900 : AFR : Savant: MODERATE ; AF: 5.288e-04 ; GQ: 60 ; GT: 1|0 ; AD: 20,12 ; DP: 29 
+PASS: line 292119 : 22:46930927 : C/T : NA18963 : ASN : Savant: MODERATE ; AF: 4.125e-04 ; GQ: 60 ; GT: 0|1 ; AD: 12,19 ; DP: 24 
+
+Total passing variants: 8
+Passing variants by population:
+  EUR : 0
+  AMR : 0
+  AFR : 5
+  ASN : 3
+

@@ -1,0 +1,1 @@
+%cohort%	undef	https://s3-us-west-2.amazonaws.com/mayo-bic-tools/variant_miner/vcfs/1KG.chr22.anno.infocol.vcf.gz		0	UG
