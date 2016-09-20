@@ -20,26 +20,33 @@ sudo mongod
 
 #Filter the gVCFs to contain genotype quality values > 20 and then create JSON files
 ```
-for x in *gz
+time for x in *gz
 do
 	echo ${x/g.vcf.gz/gq20.g.vcf}
-	bgzip -dc $x|perl scripts/FormatFilter.pl - > ${x/g.vcf.gz/gq20.g.vcf}
+	zcat $x|perl scripts/FormatFilter.pl - > ${x/g.vcf.gz/gq20.g.vcf}
 	perl scripts/gVCF_split.pl -i ${x/g.vcf.gz/gq20.g.vcf}|perl scripts/gVCF2Mongo.pl -v - -s 1000Genomes
 	rm ${x/g.vcf.gz/gq20.g.vcf}
 done
 
+#real    0m0.969s
+#user    0m1.232s
+#sys     0m0.044s
 ```
 
-# TODO: Install sharded cluster
-
-
-
-#Import the full JSON
+# Create single entries to prime the indexes
 ```
-mongoimport -d challenge2 -c block block.json --drop
-mongoimport -d challenge2 -c sampleFormat sampleFormat.json --drop
-```
+time for x in sampleFormat.json block.json
+do
+ echo $x
+ head -1 $x > ${x}.2
+ mongoimport -d challenge2 -c ${x/.json/} ${x}.2 
+ rm ${x}.2
+done
+#real    0m0.257s
+#user    0m0.012s
+#sys     0m0.004s
 
+```
 #Add indexes to collections
 ```
 mongo challenge2 --eval 'db.block.ensureIndex({ sample: 1 })'
@@ -52,9 +59,32 @@ mongo challenge2  --eval 'db.sampleFormat.ensureIndex({ GT: 1 })'
 mongo challenge2 --eval 'db.sampleFormat.ensureIndex({ AD_2: 1 })'
 ```
 
+#Import the full JSON
+```
+time mongoimport -d challenge2 -c block block.json --drop
+#2016-09-19T21:00:01.404+0000    imported 19263 documents
+#real    0m1.078s
+#user    0m0.300s
+#sys     0m0.032s
+
+
+time mongoimport -d challenge2 -c sampleFormat sampleFormat.json --drop
+#2016-09-19T21:46:15.765+0000    imported 137589450 documents
+#real    45m43.636s
+#user    48m1.124s
+#sys     2m14.472s
+```
 
 #Run your queries
 ```
-mongo --quiet challenge2 < scripts/challenge2.js > out
+time mongo --quiet challenge2 < scripts/challenge2.js > out
+#real    14m42.632s
+#user    0m0.324s
+#sys     0m0.020s
 
+```
+#Stats:
+```
+block: "storageSize" : 872448
+sampleFormat:	"storageSize" : 6931054592
 ```

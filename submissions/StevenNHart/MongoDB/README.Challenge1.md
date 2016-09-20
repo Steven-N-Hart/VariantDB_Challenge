@@ -20,8 +20,11 @@ Transform the VCF sampleFormat and INFO data into JSON for uploading to the data
 * I gave the VCF a study name to merge with the sample names so I can prevent conflicts in the namespace when adding new samples
 * I created a varID key by combining "chrom:pos:ref:alt" so I know what variant position I am talking about
 ```
-bgzip -dc 1KG.chr22.anno.infocol.vcf.gz |perl scripts/VCF2Mongo.pl -VCF - -study 1000Genomes 
-
+time zcat 1KG.chr22.anno.infocol.vcf.gz |perl scripts/VCF2Mongo.pl -VCF - -study 1000Genomes 
+#Line Number 348000 of 348234 (100%)
+#real    37m28.909s
+#user    34m53.484s
+#sys     0m33.116s
 ```
 
 Transform the cryptic relatedness file into JSON
@@ -30,6 +33,9 @@ Transform the cryptic relatedness file into JSON
 
 ```
 perl scripts/parseRelatedness.pl -i README.sample_cryptic_relations
+#real    0m0.018s
+#user    0m0.012s
+#sys     0m0.000s
 ```
 
 The last transformation is for the population descriptions
@@ -39,6 +45,9 @@ The last transformation is for the population descriptions
 
 ```
 perl scripts/parsePopulations.pl -i phase1_integrated_calls.20101123.ALL.panel
+#real    0m0.026s
+#user    0m0.020s
+#sys     0m0.000s
 ```
 I now have 4 different json files to import into MongoDB
 
@@ -53,13 +62,17 @@ sudo mongod
 
 #Create single entries to prime the indexes
 ```
-for x in *json
+time for x in *json
 do
  echo $x
  head -1 $x > ${x}.2
  mongoimport -d test -c ${x/.json/} ${x}.2 
  rm ${x}.2
 done
+
+#real    0m1.136s
+#user    0m0.016s
+#sys     0m0.020s
 ```
 
 #Add indexes to collections
@@ -81,10 +94,29 @@ mongo --eval 'db.sampleFormat.ensureIndex({ sampleID: 1 })'
 
 #Load full collections
 ```
-mongoimport -d test -c info info.json
-mongoimport -d test -c sampleFormat sampleFormat.json
-mongoimport -d test -c cryptic cryptic.json
-mongoimport -d test -c populations populations.json
+time mongoimport -d test -c info info.json
+#real    0m26.367s
+#user    0m14.608s
+#sys     0m0.600s
+
+time mongoimport -d test -c sampleFormat sampleFormat.json
+#2016-09-19T18:23:22.558+0000    imported 137584795 documents
+#real    159m57.981s
+#user    49m15.824s
+#sys     2m26.568s
+
+time mongoimport -d test -c cryptic cryptic.json
+#2016-09-19T18:34:30.907+0000    imported 40 documents
+#real    0m0.014s
+#user    0m0.000s
+#sys     0m0.008s
+
+time mongoimport -d test -c populations populations.json
+#2016-09-19T18:34:57.522+0000    imported 1092 documents
+#real    0m0.035s
+#user    0m0.012s
+#sys     0m0.008s
+
 ```
 
 #Build the query
@@ -94,5 +126,19 @@ mongo --quiet test < scripts/challenge1.js
 #Result
 
 ```
-{ "EUR" : 3194, "ASN" : 2083, "AMR" : 63, "AFR" : 4081 }
+{ "EUR" : 2719, "ASN" : 1641, "AMR" : 53, "AFR" : 3563 }
+
+real    1m33.856s
+user    0m2.636s
+sys     0m0.252s
+
+```
+# Stats:
+```
+info:  		"storageSize" : 37142528,
+cryptic:	"storageSize" : 32768,
+sampleFormat:	"storageSize" : 6917197824,
+populations:	"storageSize" : 65536
+
+
 ```
