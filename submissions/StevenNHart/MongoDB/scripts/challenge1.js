@@ -1,4 +1,7 @@
-//Find the samples to keep
+
+var SAMPLES = []
+db.cryptic.find({Population: {$not :/"ASW"/}, Relationship: {$not: /"Sibling"/}},{"Sample_1":1, "Sample_2":1, _id:0}).forEach(function(doc){SAMPLES.push(doc.Sample_1);SAMPLES.push(doc.Sample_2)})
+
 var getSample = function(doc) { return doc.samples; }
 
 var getEthnicity = function(line){
@@ -29,6 +32,7 @@ for (i=0;i<POPS.length;i++){
   finalResult[POPS[i]] = 0
 }
 
+// Create a key for each population and add an array f samples in that population
 var sampleEthnicGroups = db.populations.aggregate([
 {
   $group:{
@@ -37,23 +41,6 @@ var sampleEthnicGroups = db.populations.aggregate([
   }
 }
 ])
-
-var excludeSamples = db.cryptic.aggregate([
-    {   $match: {"Relationship": "Sibling","Population":"ASW"} },
-  {
-        "$group": {
-      "_id": "$Population", 
-      "Sample_1": { "$addToSet": "$Sample_1" }, 
-      "Sample_2": { "$addToSet": "$Sample_2" }
-    }
-  },
-  { 
-    "$project": {
-      "samples": { "$setUnion": [ "$Sample_1", "$Sample_2" ] }, 
-      "_id": 0
-    }
-   }
- ]).map(getSample)[0]
 
 
 var infoCursor = db.info.find(
@@ -71,9 +58,9 @@ infoCursor.forEach(
       q['ref']      = infoLine.ref;
       q['alt']      = infoLine.alt;
       q['GT']       = {$in:['0/1','0|1']};
-      q['AD_2']     = {$gt: 3};
+      q['AD_2']     = {$gt: 10};
       q['GQ']       = {$gt: 30};
-      q['sampleID'] = {$nin:excludeSamples};
+      q['sampleID'] = {$in:SAMPLES};
       var keep = infoCursor.hasNext()
       if(keep === true ){
         end = 0
@@ -94,7 +81,4 @@ infoCursor.forEach(
       }
     }
 )
-
-
-
 
