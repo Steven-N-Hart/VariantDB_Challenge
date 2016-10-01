@@ -69,22 +69,22 @@ time mongoimport -d challenge2 -c block block.json --drop
 
 
 time mongoimport -d challenge2 -c sampleFormat sampleFormat.json --drop
-#2016-09-19T21:46:15.765+0000    imported 137589450 documents
-#real    45m43.636s
-#user    48m1.124s
-#sys     2m14.472s
+#real    0m1.138s
+#user    0m0.168s
+#sys     0m0.008s
+
 ```
 
 #Run your queries
 ```
 time mongo --quiet challenge2 < scripts/challenge2.js > out
-#real    14m42.632s
-#user    0m0.324s
-#sys     0m0.020s
-
+#real    0m1.138s
+#user    0m0.168s
+#sys     0m0.008s
 ```
+
 #Stats:
 ```
 block: "storageSize" : 872448
-sampleFormat:	"storageSize" : 6931054592
+sampleFormat:	"storageSize" : 360448
 ```
