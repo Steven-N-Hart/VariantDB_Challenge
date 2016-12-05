@@ -28,27 +28,29 @@ Clone Installation Scripts:
 hg clone https://bitbucket.org/medgenua/vdb_installer
 ```
 
-Install Databases using default settings: 
+Install databases using default settings: 
 
 ```
 sudo ./Install_databases.sh
 ```
 
-install web-interface using default settings:  
+Install web-interface using default settings:  
 
 ```
 sudo ./Install_Web_Interface.sh
 ```
 
+#### Configure VariantDB 
+
 Set the number of threads to use to a a reasonable number (e.g. 3/4 of the cores)
 
 ```
 nano /VariantDB/.Credentials/.credentials
+     
+      MYSQLTHREADS=6
 ```
-=> MYSQLTHREADS=6
-(here : VM has 8 CPU)
 
-update DB settings under /etc/mysql/my.cnf
+Update DB settings under /etc/mysql/my.cnf
 
 ```
 [mysqld]
@@ -74,9 +76,9 @@ myisam_repair_threads = 4
 myisam_sort_buffer_size = 4048M
 ```
 
-SKIP annotation launcher (rc.local) and PROFTPD configuration. Not needed for the challenge, since no external annotations are used. 
+SKIP annotation launcher (rc.local) and PROFTPD configuration. These are not needed for the challenge, since no external annotations or direct file imports are used. 
 
-reboot system to make sure all changes to config are active.
+Reboot system to make sure all changes to config are active.
 
 
 #### Create a user
@@ -110,7 +112,7 @@ perl scripts/Import.Data.pl -s files/Challenge_1/SampleSheet.txt -u 'http://127.
 ##### Some  notes:
 * -a : api key for variantdb. you can reset this using the web-interface to increase security.
 * -c : description of fields that need to be stored next to a default set of values (GT/AD/PL/all_gatk_parameters/etc)
-* The import takes about 2 hours on a 4 core SSD laptop functioning as DB & WEB host.
+* The import takes about 3 hours on a 4 core SSD laptop functioning as DB & WEB host.
 * Each chr-pos-ref-alt gets a unique id in the database. 
 * Each variant can be assigned to a sample only once (sample-variant as unique key). Double variants are skipped, and only the first occurence is used.
 
@@ -140,7 +142,7 @@ perl scripts/Challenge_1.Run.Query.pl -u 'http://127.0.0.1/variantdb' -a YOUR_AP
 ```
 
 ##### Some notes: 
-* The needed filtersettings are saved in the provided image as 'Challenge_1'. They can be exported and imported (json) for use in other VariantDB instances.
+
 * Results are returned as a json string holding {VARIANT_A:[sample1 sample2 sample3],VARIANT_B:[sample_2 sample4]} type information.
 * The resulting numbers are calculated from this json structure by the script.
 * Also see 'files/Challenge_1/Passed.Variants.txt' for the list of passing variants
