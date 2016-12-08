@@ -17,7 +17,7 @@ Update OS & install needed packages.
 
 ```
 apt-get update && apt-get upgrade
-apt-get install mercurial 
+apt-get install mercurial git 
 ```
 
 #### Install VariantDB
@@ -28,17 +28,12 @@ Clone Installation Scripts:
 hg clone https://bitbucket.org/medgenua/vdb_installer
 ```
 
-Install databases using default settings: 
+Install the system using default settings:
 
-```
-sudo ./Install_databases.sh
+``
+sudo ./Install_single_host_full.sh
 ```
 
-Install web-interface using default settings:  
-
-```
-sudo ./Install_Web_Interface.sh
-```
 
 #### Configure VariantDB 
 
@@ -106,13 +101,14 @@ cd VariantDB_Challenge/submissions/geertvandeweyer/VariantDB
 Samples are loaded directly into VariantDB. No need to download & parse locally.
 
 ```
-perl scripts/Import.Data.pl -s files/Challenge_1/SampleSheet.txt -u 'http://127.0.01/variantdb' -p Challenge_1 -a YOUR_API_KEY -c 'SAVANT_EFFECT=list,SAVANT_IMPACT=list,ExAC.Info.AF=decimal'
+perl scripts/Import.Data.pl -s files/Challenge_1/SampleSheet.txt -u 'http://127.0.01/variantdb' -p Challenge_1 -a YOUR_API_KEY -c 'SAVANT_EFFECT=list,SAVANT_IMPACT=list,ExAC.Info.AF=decimal' -l 
 ```
 
 ##### Some  notes:
 * -a : api key for variantdb. you can reset this using the web-interface to increase security.
 * -c : description of fields that need to be stored next to a default set of values (GT/AD/PL/all_gatk_parameters/etc)
-* The import takes about 3 hours on a 4 core SSD laptop functioning as DB & WEB host.
+* The import takes about 7 hours on a 4 core SSD laptop functioning as DB & WEB host while keeping the system live.
+* The import takes about 3 hours on the same system while locking the system during the import (-l) option.
 * Each chr-pos-ref-alt gets a unique id in the database. 
 * Each variant can be assigned to a sample only once (sample-variant as unique key). Double variants are skipped, and only the first occurence is used.
 

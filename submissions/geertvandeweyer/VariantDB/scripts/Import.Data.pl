@@ -14,8 +14,9 @@ use warnings;
 # a : apikey
 # p : project name
 # c : custom field string.
+# l : lockdown mode: VariantDB is brought down to speed up import.
 our %opts = ();
-getopts("s:u:a:p:c:h", \%opts);
+getopts("s:u:a:p:c:hl", \%opts);
 print "\nStarting...\n\n";
 if (defined($opts{'h'})) {
 	&PrintHelp;	
@@ -52,20 +53,28 @@ if ($return ne '1') {
 print "Connection established!\n";
 
 # construct the api call to create the import folder on the server.
-my $call = $vdb_url."/PrepareImportData?apiKey=$apikey";
+my $call = $vdb_url."/PrepareImportData";#?apiKey=$apikey";
 open IN, $opts{'s'} or die("Could not open samplesheet for reading\n");
 my $i = 0;
+my %form = ("apiKey" => "$apikey");
 while (<IN>) {
 	chomp;
 	my ($n,$g,$v,$b,$s,$f) = split(/\t/,$_);
 	$i++;
-	$call .= "&n$i=$n&g$i=$g&v$i=$v&b$i=$b&s$i=$s&f$i=$f";
+	$form{"n$i"} = $n;
+	$form{"g$i"} = $g;
+	$form{"v$i"} = $v;
+	$form{"b$i"} = $b;
+	$form{"s$i"} = $s;
+	$form{"f$i"} = $f;
+	#$call .= "&n$i=$n&g$i=$g&v$i=$v&b$i=$b&s$i=$s&f$i=$f";
 }
 close IN;
 # project defined? 
 if (defined($opts{'p'}) && $opts{'p'} ne '') {
 	# add project name if provided.
-	$call .= "&p=".$opts{'p'};
+	#$call .= "&p=".$opts{'p'};
+	$form{"p"} = $opts{'p'};
 }
 # custom fields? 
 if (defined($opts{'c'})) {
@@ -83,18 +92,25 @@ if (defined($opts{'c'})) {
 			print "NOTE : floating point will be considered as a decimal.\n";
 			$t = 'decimal';
 		}
-		$call .= "&cf_name$idx=$k&cf_type$idx=$t";
+		#$call .= "&cf_name$idx=$k&cf_type$idx=$t";
+		$form{"cf_name$idx"} = $k;
+		$form{"cf_type$idx"} = $t;
 	}
 }
+# just add the lockdown, it's ignored for non admin users.
+if (defined($opts{'l'})) {
+	$form{'l'} = 1;
+}
+
 my $nr_samples = $i;
-$content = $ua->get($call);
+$content = $ua->post($call,\%form);
 my $stat = -1;
 while ($stat == -1) {
 	($stat,$return) = j_decode($content);
 	if ($stat == -1) {
 		print "no json obtained.\n";
 		sleep 5;
-		$content = $ua->get($call);
+		$content = $ua->post($call,\%form);
 		next;
 	}
 }
@@ -106,7 +122,6 @@ if (!defined($return->{'status'}) || $return->{'status'} ne 'ok') {
 	exit;
 }
 my $path = $return->{'path'};
-
 # submit the actual import.
 $call =  $vdb_url."/ImportData/$path/$nr_samples?apiKey=$apikey";
 $stat = -1;
