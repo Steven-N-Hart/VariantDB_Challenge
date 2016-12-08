@@ -9,7 +9,7 @@ use Data::Dumper;
 $|++;
 
 ## settings:
-my $apply_filter = 'challenge_2'; # the criteria are stored under this name.
+my $apply_filter = 'Challenge_2'; # the criteria are stored under this name.
 
 
 ###############
